@@ -1,0 +1,27 @@
+[
+   {
+      "id": 482,
+      "room_name": "Room #482",
+      "avg_students_age": null
+   },
+   {
+      "id": 661,
+      "room_name": "Room #661",
+      "avg_students_age": 11
+   },
+   {
+      "id": 913,
+      "room_name": "Room #913",
+      "avg_students_age": 19
+   },
+   {
+      "id": 111,
+      "room_name": "Room #111",
+      "avg_students_age": 31
+   },
+   {
+      "id": 957,
+      "room_name": "Room #957",
+      "avg_students_age": 33
+   }
+]
