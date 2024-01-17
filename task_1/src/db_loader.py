@@ -30,10 +30,18 @@ class DBLoader(DBConnector):
                 sql = f"INSERT INTO {table_name} ({', '.join(columns)}) VALUES ({placeholders})"
                 self.cur.execute(sql, values)
                 self.connection.commit()
-            self.close_connection()
             logger.info(f"Inserted data into {table_name} successfully.")
+            self.add_index()
+            self.close_connection()
         except mysql.connector.Error as err:
             logger.error(f"MySQL Error: {err}")
 
+    # добавление индексов
     def add_index(self):
-        pass
+        try:
+            self.cur.execute('CREATE INDEX idx_rooms_id ON rooms (id)')
+            self.cur.execute('CREATE INDEX idx_students_room ON students(room)')
+            logger.info("Indexes are created")
+            self.connection.commit()
+        except Exception as ex:
+            logger.error(f"Unexpected error with creating indexes : {ex}")
