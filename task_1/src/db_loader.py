@@ -2,7 +2,7 @@ from db_connector import DBConnector
 import mysql.connector
 import json
 from logger import logger
-import click
+
 
 class DBLoader(DBConnector):
 
@@ -13,11 +13,8 @@ class DBLoader(DBConnector):
             data_from_json_file = json.load(js_file)
             return data_from_json_file
 
-
-    def insert_data(self, path_json_file):
+    def insert_data(self, path_json_file, table_name):
         data = self.read_json(path_json_file)
-        # название таблицы для заполнения из пути файла
-        table_name = path_json_file.split("/")[2].split(".")[0]
         # получение списка атрибутов заполняемой таблицы
         first_item = data[0]
         columns = list(first_item.keys())
@@ -37,3 +34,6 @@ class DBLoader(DBConnector):
             logger.info(f"Inserted data into {table_name} successfully.")
         except mysql.connector.Error as err:
             logger.error(f"MySQL Error: {err}")
+
+    def add_index(self):
+        pass

@@ -17,16 +17,14 @@ class SQLScriptExecutor(DBConnector):
                 converted_data = self.to_json(result_of_script)
                 file = open("../created_files/result_set.json", "w+")
                 json.dump(converted_data, file, indent=3)
-                print("Your data has been stored in the 'result_set.json' file. ")
-                logger.info("SQL script executed successfully.")
+                logger.info("Data has been stored in the 'result_set.json' file. ")
             elif format_type.lower() == "xml":
                 converted_data = self.to_xml(result_of_script)
                 file = open("../created_files/result_set.xml", "w+")
                 file.write(converted_data)
-                print("Your data has been stored in the 'result_set.xml' file. ")
-                logger.info("SQL script executed successfully.")
+                logger.info("Data has been stored in the 'result_set.xml' file. ")
             else:
-                print("Invalid format. Please use 'json' or 'xml'.")
+                logger.error("Invalid format. Please use 'json' or 'xml'. ")
         except mysql.connector.Error as err:
             logger.error(f"MySQL Error: {err}")
 
