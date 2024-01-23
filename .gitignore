@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 .idea
+#task_1
+result_set.*
+config.py
+
 # Distribution / packaging
 .Python
 build/
