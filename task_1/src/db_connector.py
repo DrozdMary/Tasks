@@ -1,11 +1,18 @@
 import mysql.connector
 from config import host, user, password, db_name, port
 from logger import logger
+from sql.sql_scripts import create_table_rooms,create_table_students
 
 
 class DBConnector:
+    """
+    Connects to the MySQL database and creates tables if they do not exist
+    """
+
     def __init__(self):
-        # подключение к созданной базе данных и создание таблиц
+        """
+        Initializes a new instance of the DBConnector class.
+        """
         try:
             self.connection = mysql.connector.connect(
                 host=host, user=user, password=password, database=db_name, port=port
@@ -19,23 +26,28 @@ class DBConnector:
         except Exception as ex:
             logger.error(f"Unexpected error with MySQL connection : {ex}")
 
-    # метод создание таблиц в базе данных
-    def create_tables(self):
+    def create_tables(self) -> None:
+        """
+        Creates tables 'rooms' and 'students' if they do not exist.
+
+        Returns:
+            None
+        """
         try:
-            self.cur.execute(
-                "create table  IF NOT EXISTS rooms ( id int NOT NULL, name varchar(50), primary key(id) )"
-            )
-            self.cur.execute(
-                "create table  IF NOT EXISTS students( birthday datetime, id int primary key, name char(100), room int, "
-                "sex CHAR(1))"
-            )
+            self.cur.execute(create_table_rooms)
+            self.cur.execute(create_table_students)
             logger.info("Tables are created")
             self.connection.commit()
         except Exception as ex:
             logger.error(f"Unexpected error with creating tables : {ex}")
 
-    # метод для прерывания подключения к базе данных
-    def close_connection(self):
+    def close_connection(self) -> None:
+        """
+        Closes the connection to the MySQL database
+
+        Returns:
+            None
+        """
         if self.connection.is_connected():
             self.cur.close()
             self.connection.close()

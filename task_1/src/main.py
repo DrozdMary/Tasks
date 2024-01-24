@@ -1,48 +1,8 @@
 import click
 from db_loader import DBLoader
 from sql_script_executor import SQLScriptExecutor
+from sql.sql_scripts import SQL_script_1, SQL_script_2, SQL_script_3, SQL_script_0
 
-# Список комнат и количество студентов в каждой из них
-SQL_script_0 = """select
-    rooms.id,
-rooms.name as room_name,
-count(students.id) as students_in_room
-from rooms
-left join students
-on rooms.id = students.room
-group by rooms.id, rooms.name"""
-
-# 5 комнат, где самый маленький средний возраст студентов
-SQL_script_1 = """SELECT
-    rooms.id,
-rooms.name as room_name,
-    CAST(avg((YEAR(CURRENT_DATE) - YEAR(students.birthday))) AS SIGNED) AS avg_students_age
-FROM students
-right join rooms on students.room=rooms.id
-group by rooms.name
-order by avg_students_age
-limit 5
-"""
-
-# 5 комнат с самой большой разницей в возрасте студентов
-SQL_script_2 = """SELECT
-    rooms.id,
- rooms.name AS room_name,
- (max(YEAR(CURRENT_DATE) - YEAR(students.birthday))-min(YEAR(CURRENT_DATE) - YEAR(students.birthday))) AS diff_of_age
-from rooms
-left join students on rooms.id = students.room
-group by rooms.name
-order by diff_of_age desc
-limit 5
-"""
-
-# Список комнат где живут разнополые студенты
-SQL_script_3 = """SELECT rooms.id, rooms.name AS room_name
-FROM rooms
-left JOIN students ON rooms.id = students.room
-GROUP BY rooms.id, rooms.name
-HAVING COUNT(DISTINCT students.sex) > 1;
-"""
 SQL_scripts = [SQL_script_0, SQL_script_1, SQL_script_2, SQL_script_3]
 db_loader = DBLoader()
 
@@ -57,7 +17,19 @@ db_loader = DBLoader()
               2 - 5 rooms with the biggest age difference of students;
               3 - List of rooms where students of different sexes live;''')
 @click.option('-f', '--file_format', type=click.Choice(['xml', 'json']), help='choose formal (xml/json)')
-def work(tables_name, path, sql_request, file_format):
+def work(tables_name: str, path: str, sql_request: int, file_format: str) -> None:
+    """
+    Perform the specified operation based on user inputs.
+
+    Parameters:
+        tables_name (str): Name of the table.
+        path (str): Path of the file.
+        sql_request (int): SQL script to execute.
+        file_format (str): Output format (xml/json).
+
+    Returns:
+        None
+    """
     if tables_name and path:
         db_loader.insert_data(path, tables_name)
     elif tables_name or path:
